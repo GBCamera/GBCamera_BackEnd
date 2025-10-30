@@ -27,6 +27,9 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.5'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
 
     compileOnly 'org.projectlombok:lombok:1.18.42'         // ★ 버전 고정 권장
     annotationProcessor 'org.projectlombok:lombok:1.18.42' // ★ 동일 버전

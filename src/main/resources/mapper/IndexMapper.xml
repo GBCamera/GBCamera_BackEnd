@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.camera.gbcamera_backend.mapper.IndexMapper">
+
+    <resultMap id="IndexResultMap" type="com.camera.gbcamera_backend.vo.Index">
+        <result column="index" property="index"/>
+        <result column="result" property="result" jdbcType="BLOB"/>
+    </resultMap>
+
+    <insert id="insert">
+        INSERT INTO `picture` (`index`, `result`)
+        VALUES (#{index}, #{result,jdbcType=BLOB})
+    </insert>
+
+    <select id="countByIndex" resultType="int">
+        SELECT COUNT(1)
+        FROM `picture`
+        WHERE `index` = #{index}
+    </select>
+
+    <update id="updateResult">
+        UPDATE `picture`
+        SET `result` = #{result,jdbcType=BLOB}
+        WHERE `index` = #{index}
+    </update>
+
+    <select id="selectByIndex" resultMap="IndexResultMap">
+        SELECT `index`, `result`
+        FROM `picture`
+        WHERE `index` = #{index}
+    </select>
+
+</mapper>
