@@ -6,8 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="797f94af-9c5c-4062-ae7d-d985ad3dd220" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/camera/gbcamera_backend/controller/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/camera/gbcamera_backend/controller/LoginController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/camera/gbcamera_backend/controller/IndexController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/camera/gbcamera_backend/controller/IndexController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/camera/gbcamera_backend/dto/IndexDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/camera/gbcamera_backend/dto/IndexDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/camera/gbcamera_backend/security/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/camera/gbcamera_backend/security/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/camera/gbcamera_backend/service/IndexService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/camera/gbcamera_backend/service/IndexService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,6 +51,7 @@
     &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
     &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;Spring Boot.GbCameraBackEndApplication.executor&quot;: &quot;Run&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
@@ -104,7 +107,13 @@
       <workItem from="1761702140409" duration="98000" />
       <workItem from="1761702255461" duration="5733000" />
       <workItem from="1761717115411" duration="1175000" />
-      <workItem from="1761805807985" duration="3021000" />
+      <workItem from="1761805807985" duration="5442000" />
+      <workItem from="1761830817715" duration="148000" />
+      <workItem from="1761907112275" duration="5113000" />
+      <workItem from="1761915456784" duration="603000" />
+      <workItem from="1762046192717" duration="846000" />
+      <workItem from="1762757228283" duration="2402000" />
+      <workItem from="1762823501626" duration="613000" />
     </task>
     <servers />
   </component>

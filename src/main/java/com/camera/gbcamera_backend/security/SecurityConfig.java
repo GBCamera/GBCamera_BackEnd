@@ -17,10 +17,10 @@ public class SecurityConfig {
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
-                .cors(Customizer.withDefaults())
+                .cors(Customizer.withDefaults()) // CORS 설정 적용
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST, "/login").permitAll() // 로그인 허용
-                        .anyRequest().permitAll() // 다른 요청은 일단 모두 허용
+                        .requestMatchers(HttpMethod.POST, "/login").permitAll()
+                        .anyRequest().permitAll()
                 );
         return http.build();
     }
@@ -28,9 +28,25 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:5173")); // React 개발 주소
+
+        // ✅ 프론트엔드 주소 명시
+        configuration.setAllowedOrigins(List.of("http://localhost:5173"));
+
+        // ✅ 허용할 메서드
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+
+        // ✅ 커스텀 헤더 x-index 포함 (소문자!)
+        configuration.setAllowedHeaders(List.of(
+                "x-index",
+                "content-type",
+                "accept",
+                "origin",
+                "authorization"
+        ));
+
+        // ✅ 필요하면 노출할 헤더
+        configuration.setExposedHeaders(List.of("Location"));
+
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

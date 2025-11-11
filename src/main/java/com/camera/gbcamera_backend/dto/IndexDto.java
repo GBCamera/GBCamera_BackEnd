@@ -24,4 +24,18 @@ public class IndexDto {
         @NotBlank
         private String base64; // 프론트에서 보낸 Base64 문자열
     }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class FindRequest {
+        private String index;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class FindResponse {
+        private String base64;
+    }
 }

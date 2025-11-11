@@ -13,6 +13,8 @@ import com.camera.gbcamera_backend.service.IndexService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+@CrossOrigin(origins = {"http://localhost:5173", "http://127.0.0.1:5173", "capacitor://localhost", "file://"})
+
 @RestController
 @RequestMapping
 @Validated
@@ -40,10 +42,25 @@ public class IndexController {
      */
     @PutMapping("/index/result")
     public ResponseEntity<Void> updateResult(
-            @RequestHeader("X-Index") String index, // ✅ Header에서 index 추출
+            @RequestHeader("x-index") String index, // ✅ Header에서 index 추출
             @Valid @RequestBody IndexDto.UpdateResultRequest request) {
         byte[] blob = Base64.getDecoder().decode(request.getBase64());
         indexService.updateResult(index, blob);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/find")
+    public ResponseEntity<IndexDto.FindResponse> findResult(@RequestBody IndexDto.FindRequest request) {
+        var index = request.getIndex();
+        var found = indexService.findResult(index);
+
+        if (found == null || found.getResult() == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        // byte[] → Base64 문자열 변환
+        String base64 = Base64.getEncoder().encodeToString(found.getResult());
+
+        return ResponseEntity.ok(new IndexDto.FindResponse(base64));
     }
 }

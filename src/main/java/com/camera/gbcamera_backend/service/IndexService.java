@@ -61,4 +61,9 @@ public class IndexService {
         // 너무 긴 경우 잘라내기
         return base.length() > length ? base.substring(0, length) : base;
     }
+
+    @Transactional(readOnly = true)
+    public com.camera.gbcamera_backend.vo.Index findResult(String index) {
+        return indexMapper.selectByIndex(index);
+    }
 }
