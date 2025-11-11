@@ -10,18 +10,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 0) 코드 체크아웃
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 1) 시크릿 존재 검사 (비어있으면 즉시 실패)
       - name: Sanity check secrets
         run: |
           test -n "${{ secrets.DOCKERHUB_USERNAME }}" || (echo "❌ Missing DOCKERHUB_USERNAME" && exit 1)
           test -n "${{ secrets.DOCKERHUB_TOKEN }}"    || (echo "❌ Missing DOCKERHUB_TOKEN" && exit 1)
           echo "✅ Secrets exist"
 
-      # 2) Docker Hub 로그인 (login-action 사용)
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
@@ -29,18 +26,21 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      # (선택) 로그인 사용자 확인
-      - name: Who am I on Docker?
-        run: docker info | sed -n '/Username:/p'
+      # ⬇⬇⬇ 핵심: buildx를 container 드라이버로 강제 설치/사용
+      - name: Set up Docker Buildx (container driver)
+        uses: docker/setup-buildx-action@v3
+        with:
+          install: true
+          driver: docker-container
+          use: true
+          buildkitd-flags: --debug
 
-      # 3) 디버그용: Dockerfile 확인
       - name: Ensure Dockerfile exists in repo root
         run: |
           ls -la
           test -f Dockerfile || (echo "❌ Dockerfile NOT found in repo root!" && exit 1)
           echo "✅ Dockerfile found"
 
-      # 4) 태그 생성 (latest + 커밋 SHA)
       - name: Extract metadata (tags, labels)
         id: meta
         uses: docker/metadata-action@v5
@@ -50,8 +50,7 @@ jobs:
             type=raw,value=latest
             type=sha,format=long
 
-      # 5) Docker 빌드 & 푸시
-      - name: Build and Push Docker image
+      - name: Build and Push Docker image (with GHA cache)
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -59,5 +58,6 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          # GHA 캐시 사용 — container driver에서만 동작
           cache-from: type=gha
           cache-to: type=gha,mode=max
