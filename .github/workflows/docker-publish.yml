@@ -1,4 +1,4 @@
-name: Build & Push (simple)
+name: Build & Push (debug)
 
 on:
   push:
@@ -16,7 +16,21 @@ jobs:
       - name: Print env
         run: |
           echo "Branch: $GITHUB_REF"
-          echo "Actor: $GITHUB_ACTOR"
+          echo "Actor:  $GITHUB_ACTOR"
+          echo "Repo:   $GITHUB_REPOSITORY"
+          uname -a
+
+      - name: Show workspace files (root)
+        run: |
+          echo "== ls -la =="
+          ls -la
+          echo "== find Dockerfile =="
+          (test -f Dockerfile && echo "✅ Dockerfile found in repo root") || (echo "❌ Dockerfile NOT found in repo root!" && exit 1)
+
+      - name: Show Docker version & info (before login)
+        run: |
+          docker --version
+          docker info | sed -n '1,20p' || true
 
       - name: Sanity check secrets
         run: |
@@ -24,27 +38,26 @@ jobs:
           test -n "${{ secrets.DOCKERHUB_TOKEN }}"    || (echo "❌ Missing DOCKERHUB_TOKEN" && exit 1)
           echo "✅ Secrets exist"
 
-      # 1) Docker 로그인 (password-stdin)
-      - name: Docker login
+      - name: Docker login (password-stdin)
         run: |
+          set -euxo pipefail
           echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
 
-      # 2) 로그인 확인
       - name: Who am I on Docker?
-        run: docker info | sed -n '/Username:/p'
-
-      # 3) JDK 세팅 (Dockerfile이 Gradle 빌드하므로 JDK는 없어도 되지만 유지)
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: 17
-
-      # 4) 그냥 도커 클라이언트로 빌드/푸시 (buildx 액션 제거)
-      - name: Docker build
         run: |
-          docker build --pull --no-cache -t "${{ secrets.DOCKERHUB_USERNAME }}/gbcamera:latest" .
+          docker info | sed -n '/Username:/p'
 
-      - name: Docker push
+      - name: Show Dockerfile head
         run: |
+          echo "== head -n 60 Dockerfile =="
+          head -n 60 Dockerfile || true
+
+      - name: Build (plain progress, no cache)
+        run: |
+          set -euxo pipefail
+          docker build --progress=plain --no-cache -t "${{ secrets.DOCKERHUB_USERNAME }}/gbcamera:latest" .
+
+      - name: Push
+        run: |
+          set -euxo pipefail
           docker push "${{ secrets.DOCKERHUB_USERNAME }}/gbcamera:latest"
