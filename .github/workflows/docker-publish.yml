@@ -1,24 +1,24 @@
-name: Build & Push Docker
+name: Build & Push to Docker Hub (minimal)
 
 on:
   push:
     branches: ["main"]
+  workflow_dispatch:
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
 
-    permissions:
-      contents: read
-      packages: write
-
-    env:
-      IMAGE_NAME: ${{ secrets.IMAGE_NAME || 'gbcamera-backend' }}
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      # 0) 시크릿 존재 검사 (비어있으면 즉시 실패)
+      - name: Sanity check secrets
+        run: |
+          test -n "${{ secrets.DOCKERHUB_USERNAME }}" || (echo "❌ Missing DOCKERHUB_USERNAME" && exit 1)
+          test -n "${{ secrets.DOCKERHUB_TOKEN }}" || (echo "❌ Missing DOCKERHUB_TOKEN" && exit 1)
+          echo "✅ Secrets exist"
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -32,22 +32,28 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      # 1) 직접 로그인 (password-stdin)
+      - name: Docker login (password-stdin)
+        run: |
+          echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
 
+      # 2) 로그인 확인: Username 출력되면 로그인 성공
+      - name: Who am I on Docker?
+        run: |
+          docker info | sed -n '/Username:/p'
+
+      # 3) 메타데이터(태그) 생성: 최신/커밋 SHA
       - name: Extract metadata (tags, labels)
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}
+          images: yongjooon/gbcamera
           tags: |
             type=raw,value=latest
             type=sha,format=long
 
-      - name: Build and Push Docker image
+      # 4) 빌드 & 푸시
+      - name: Build and Push
         uses: docker/build-push-action@v6
         with:
           context: .
