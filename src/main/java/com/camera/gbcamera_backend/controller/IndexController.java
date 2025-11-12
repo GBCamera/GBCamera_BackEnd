@@ -13,7 +13,14 @@ import com.camera.gbcamera_backend.service.IndexService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-@CrossOrigin(origins = {"http://localhost:5173", "http://127.0.0.1:5173", "capacitor://localhost", "file://"})
+@CrossOrigin(origins = {
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "http://localhost:5174",
+        "https://gb-camera-front-end.vercel.app",
+        "capacitor://localhost",
+        "file://"
+})
 
 @RestController
 @RequestMapping

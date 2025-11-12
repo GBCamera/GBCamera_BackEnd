@@ -14,16 +14,16 @@ public class WebConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        // 개발 중엔 패턴으로 넓게 허용 (Electron file:// 대응)
-                        .allowedOriginPatterns("*")
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                        // 커스텀 헤더와 Content-Type 허용
-                        .allowedHeaders("x-index", "Content-Type", "Authorization", "Accept", "Origin")
-                        // 필요 시 노출할 헤더
+                        .allowedOrigins(
+                                "http://localhost:5173",
+                                "http://127.0.0.1:5173",
+                                "http://localhost:5174",
+                                "https://gb-camera-front-end.vercel.app"
+                        )
+                        .allowedMethods("GET","POST","PUT","DELETE","OPTIONS")
+                        .allowedHeaders("x-index","Content-Type","Authorization","Accept","Origin")
                         .exposedHeaders("Location")
-                        // 쿠키를 안 쓰면 false로 두는 게 단순합니다.
-                        .allowCredentials(false)
-                        // 프리플라이트 캐시 시간
+                        .allowCredentials(false)   // 쿠키 안 쓰면 false
                         .maxAge(3600);
             }
         };
